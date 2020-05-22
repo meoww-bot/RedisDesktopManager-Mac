@@ -25,13 +25,16 @@ jobs:
     env:
       package_name: rdm
     steps:
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.0.0
         with:
           version: ${{ matrix.qt_ver }}
-      - name: Clone 
+      - name: Clone repo
         run: |
-          git clone --recursive https://github.com/uglide/RedisDesktopManager.git -b ${{ github.ref }} rdm 
+          git clone --recursive https://github.com/uglide/RedisDesktopManager.git -b ${{ steps.get_version.outputs.VERSION }} rdm 
       # patch: https://github.com/cjbd/breakpad/commit/e436b073307e84a7695b355a4ea98acbe5548423
       - name: Install requirements
         run: brew install openssl cmake python3      
@@ -59,8 +62,8 @@ jobs:
           set -x
           cd rdm/bin/osx/release 
           macdeployqt ${package_name}.app -qmldir=../../../src/qml -verbose=1 -dmg
-          cp rdm.dmg redis-desktop-manager-${{ github.ref }}.dmg
-          zip --junk-paths rdm.zip redis-desktop-manager-${{ github.ref }}.dmg
+          cp rdm.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
+          zip --junk-paths rdm.zip redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
