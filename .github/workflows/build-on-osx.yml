@@ -5,7 +5,7 @@ on:
 #     types: [published]
   push:
     tags:
-    - 'v*'
+    - '*'
 #     branches: 
 #     - master
   # schedule:
@@ -24,25 +24,18 @@ jobs:
         qt_arch: [clang_64]
     env:
       package_name: rdm
-      tag_name: 0.9.8
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.0.0
         with:
           version: ${{ matrix.qt_ver }}
-      # - uses: actions/checkout@v2
-      #   # https://github.com/marketplace/actions/checkout
-      #   with:
-      #     repository: uglide/RedisDesktopManager
-      #     ref: 0.9.8
-      #     submodules: 'recursive'
-      - name: clone rdm
+      - name: Clone 
         run: |
-          git clone --recursive https://github.com/uglide/RedisDesktopManager.git -b ${tag_name} rdm 
+          git clone --recursive https://github.com/uglide/RedisDesktopManager.git -b ${{ github.ref }} rdm 
       # patch: https://github.com/cjbd/breakpad/commit/e436b073307e84a7695b355a4ea98acbe5548423
-      - name: install requirements
+      - name: Install requirements
         run: brew install openssl cmake python3      
-      - name: build macos
+      - name: Build
         run: |
           cd rdm
           set -x
@@ -61,14 +54,13 @@ jobs:
           sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
           qmake CONFIG-=debug 
           make -s -j 8
-      # tag 打包
-      - name: package
+      - name: Package dmg
         run: |
           set -x
           cd rdm/bin/osx/release 
           macdeployqt ${package_name}.app -qmldir=../../../src/qml -verbose=1 -dmg
-          cp rdm.dmg redis-desktop-manager-${tag_name}.dmg
-          zip --junk-paths rdm.zip redis-desktop-manager-${tag_name}.dmg
+          cp rdm.dmg redis-desktop-manager-${{ github.ref }}.dmg
+          zip --junk-paths rdm.zip redis-desktop-manager-${{ github.ref }}.dmg
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
