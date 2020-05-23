@@ -62,14 +62,13 @@ jobs:
           # cp ./bin/* ../../bin/osx/release
           cd ../../src
           cp resources/Info.plist.sample resources/Info.plist
-          sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
-          qmake CONFIG-=debug 
+          sed -i '' 's/0.0.0/${{ steps.get_version.outputs.VERSION }}/g' resources/Info.plist
+          # sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
+          qmake CONFIG-=debug CONFIG+=sdk_no_version_check
           make -s -j 8
       - name: Package dmg
         run: |
           set -x
-          ls rdm/bin/osx/release/${package_name}.app/Contents/
-          ls rdm/bin/osx/release/${package_name}.app/Contents/Resources/
           cp -rf rdm/src/py/formatters rdm/bin/osx/release/${package_name}.app/Contents/Resources/
           cp -f rdm/src/py/py.qrc rdm/bin/osx/release/${package_name}.app/Contents/Resources/
           cd rdm/bin/osx/release
@@ -99,5 +98,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: rdm.zip
+          name: rdm
           path: ./rdm/bin/osx/release/rdm.zip
