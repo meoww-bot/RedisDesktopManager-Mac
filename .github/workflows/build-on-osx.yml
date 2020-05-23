@@ -42,11 +42,12 @@ jobs:
         run: |
           cd rdm
           set -x
-          sed -i '' 's/1050/1070/g' ./3rdparty/gbreakpad/src/client/mac/sender/Breakpad.xib
+          # sed -i '' 's/1050/1070/g' ./3rdparty/gbreakpad/src/client/mac/sender/Breakpad.xib
           cd src
+          echo -e '#ifndef RDM_VERSION\n    #define RDM_VERSION "2099.0.0"\n#endif // !RDM_VERSION' >> version.h
           ./configure
           cd ../3rdparty/crashreporter/
-          git checkout 7ec6f00
+          # git checkout 7ec6f00
           qmake DESTDIR=./bin
           make -s -j 8
           mkdir -p ../../bin/osx/release
