@@ -60,7 +60,7 @@ jobs:
           sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
           qmake CONFIG-=debug 
           make -s -j 8
-          ls rdm/bin/osx/release/
+          ls ../bin/osx/release/
       - name: Package dmg
         run: |
           set -x
