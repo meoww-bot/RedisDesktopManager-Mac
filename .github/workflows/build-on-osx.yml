@@ -46,6 +46,7 @@ jobs:
         run: |
           set -x
           cd rdm/src
+          sed -i '' 's/^\(\s*\)VERSION=.*/\1VERSION=${{ steps.get_version.outputs.VERSION }}/g' rdm.pro
           echo -e '#ifndef RDM_VERSION\n    #define RDM_VERSION "${{ steps.get_version.outputs.VERSION }}"\n#endif // !RDM_VERSION' >> version.h
           cp resources/Info.plist.sample resources/Info.plist
           sed -i '' 's/0.0.0/${{ steps.get_version.outputs.VERSION }}/g' resources/Info.plist
