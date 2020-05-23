@@ -60,13 +60,13 @@ jobs:
           sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
           qmake CONFIG-=debug 
           make -s -j 8
-          ls ../bin/osx/release/
       - name: Package dmg
         run: |
           set -x
-          ls rdm/bin/osx/release/${package_name}.app/
-          cp -f rdm/src/py/formatters rdm/bin/osx/release/${package_name}.app/Resources/
-          cp -f rdm/src/py/py.qrc rdm/bin/osx/release/${package_name}.app/Resources/
+          ls rdm/bin/osx/release/${package_name}.app/Contents/
+          ls rdm/bin/osx/release/${package_name}.app/Contents/Resources/
+          cp -f rdm/src/py/formatters rdm/bin/osx/release/${package_name}.app/Contents/Resources/
+          cp -f rdm/src/py/py.qrc rdm/bin/osx/release/${package_name}.app/Contents/Resources/
           cd rdm/bin/osx/release
           macdeployqt ${package_name}.app -qmldir=../../../src/qml -verbose=1 -dmg
           cp rdm.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
