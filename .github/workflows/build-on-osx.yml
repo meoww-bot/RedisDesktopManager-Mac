@@ -64,6 +64,7 @@ jobs:
       - name: Package dmg
         run: |
           set -x
+          ls rdm/bin/osx/release/${package_name}.app/
           cp -f rdm/src/py/formatters rdm/bin/osx/release/${package_name}.app/Resources/
           cp -f rdm/src/py/py.qrc rdm/bin/osx/release/${package_name}.app/Resources/
           cd rdm/bin/osx/release
