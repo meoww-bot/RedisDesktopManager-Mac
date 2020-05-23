@@ -44,6 +44,7 @@ jobs:
           cd bin/osx/release
           echo -e '[install]\nprefix=' >> setup.cfg
           pip3 install -t ./ -r ../../../src/py/requirements.txt --upgrade
+          ls -al
       - name: Build
         run: |
           set -x
@@ -70,8 +71,8 @@ jobs:
           set -x
           ls rdm/bin/osx/release/${package_name}.app/Contents/
           ls rdm/bin/osx/release/${package_name}.app/Contents/Resources/
-          cp -rf rdm/src/py/formatters rdm/bin/osx/release/${package_name}.app/Contents/Resources/
-          cp -f rdm/src/py/py.qrc rdm/bin/osx/release/${package_name}.app/Contents/Resources/
+          cp -rf rdm/src/py/formatters rdm/bin/osx/release/${package_name}.app/Contents/Resources/py/
+          cp -f rdm/src/py/py.qrc rdm/bin/osx/release/${package_name}.app/Contents/Resources/py/
           cd rdm/bin/osx/release
           macdeployqt ${package_name}.app -qmldir=../../../src/qml -verbose=1 -dmg
           cp rdm.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
