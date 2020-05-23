@@ -40,10 +40,8 @@ jobs:
         run: brew install openssl cmake python3      
       - name: Build
         run: |
-          cd rdm
           set -x
-          # sed -i '' 's/1050/1070/g' ./3rdparty/gbreakpad/src/client/mac/sender/Breakpad.xib
-          cd src
+          cd rdm/src
           echo -e '#ifndef RDM_VERSION\n    #define RDM_VERSION "2099.0.0"\n#endif // !RDM_VERSION' >> version.h
           ./configure
           cd ../3rdparty/crashreporter/
@@ -54,7 +52,6 @@ jobs:
           cp ./bin/crashreporter ../../bin/osx/release 
           cd ../../src
           cp resources/Info.plist.sample resources/Info.plist
-          sed -i '' "s/0.9.999/0.9.8/g" rdm.pro
           sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
           qmake CONFIG-=debug 
           make -s -j 8
