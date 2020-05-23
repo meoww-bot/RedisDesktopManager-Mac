@@ -38,10 +38,12 @@ jobs:
       # patch: https://github.com/cjbd/breakpad/commit/e436b073307e84a7695b355a4ea98acbe5548423
       - name: Install requirements
         run: |
-          brew install openssl cmake python3
+          set -x
           mkdir -p ./bin/osx/release
           cd bin/osx/release
           echo -e '[install]\nprefix=' >> setup.cfg
+          ls ../../../
+          ls ../../../src/py/
           pip3 install -t ./ -r ../../../src/py/requirements.txt --upgrade
       - name: Build
         run: |
