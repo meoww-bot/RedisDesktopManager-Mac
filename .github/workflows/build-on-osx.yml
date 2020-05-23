@@ -47,8 +47,9 @@ jobs:
       - name: Build
         run: |
           set -x
+          sed -i '' '224,226s/^/#/' rdm/src/app/app.cpp # disable auto update
           cd rdm/src
-          echo -e '#ifndef RDM_VERSION\n    #define RDM_VERSION "2099.0.0"\n#endif // !RDM_VERSION' >> version.h
+          echo -e '#ifndef RDM_VERSION\n    #define RDM_VERSION "${{ steps.get_version.outputs.VERSION }}"\n#endif // !RDM_VERSION' >> version.h
           cp resources/Info.plist.sample resources/Info.plist
           sed -i '' 's/0.0.0/${{ steps.get_version.outputs.VERSION }}/g' resources/Info.plist
           qmake CONFIG-=debug CONFIG+=sdk_no_version_check
