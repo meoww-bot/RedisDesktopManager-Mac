@@ -37,7 +37,12 @@ jobs:
           git clone --recursive https://github.com/uglide/RedisDesktopManager.git -b ${{ steps.get_version.outputs.VERSION }} rdm 
       # patch: https://github.com/cjbd/breakpad/commit/e436b073307e84a7695b355a4ea98acbe5548423
       - name: Install requirements
-        run: brew install openssl cmake python3      
+        run: |
+          brew install openssl cmake python3
+          mkdir -p ./bin/osx/release
+          cd bin/osx/release
+          echo -e '[install]\nprefix=' >> setup.cfg
+          pip3 install -t ./ -r ../../../src/py/requirements.txt --upgrade
       - name: Build
         run: |
           set -x
@@ -48,7 +53,6 @@ jobs:
           git checkout 7ec6f00
           qmake DESTDIR=./bin
           make -s -j 8
-          mkdir -p ../../bin/osx/release
           cp ./bin/crashreporter ../../bin/osx/release 
           cd ../../src
           cp resources/Info.plist.sample resources/Info.plist
