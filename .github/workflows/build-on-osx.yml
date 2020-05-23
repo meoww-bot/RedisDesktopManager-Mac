@@ -22,8 +22,6 @@ jobs:
         os: [macos-latest]
         qt_ver: [5.12.6]
         qt_arch: [clang_64]
-    env:
-      package_name: Redis\ Desktop\ Manager
     steps:
       - name: Get the version
         id: get_version
@@ -57,8 +55,8 @@ jobs:
         run: |
           set -x
           cd rdm/bin/osx/release
-          macdeployqt ${package_name}.app -qmldir=../../../src/qml -verbose=1 -dmg
-          cp ${package_name}.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
+          macdeployqt Redis\ Desktop\ Manager.app -qmldir=../../../src/qml -verbose=1 -dmg
+          cp Redis\ Desktop\ Manager.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
           zip --junk-paths rdm.zip redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
       - name: Create Release
         id: create_release
