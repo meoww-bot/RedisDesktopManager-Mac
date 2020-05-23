@@ -54,7 +54,12 @@ jobs:
           git checkout 7ec6f00
           qmake DESTDIR=./bin
           make -s -j 8
-          cp ./bin/crashreporter ../../bin/osx/release 
+          cp ./bin/crashreporter ../../bin/osx/release
+          cd ../pyotherside/
+          qmake DESTDIR=./bin
+          make -s -j 8
+          ls ./bin/
+          cp ./bin/* ../../bin/osx/release
           cd ../../src
           cp resources/Info.plist.sample resources/Info.plist
           sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
@@ -96,10 +101,4 @@ jobs:
         with:
           name: rdm.zip
           path: ./rdm/bin/osx/release/rdm.zip
-      - name: Upload Entire Directory
-        uses: actions/upload-artifact@v2
-        with:
-          name: rdm
-          path: ./rdm/
-
 
