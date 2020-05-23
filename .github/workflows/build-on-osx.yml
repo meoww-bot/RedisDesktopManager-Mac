@@ -39,11 +39,10 @@ jobs:
       - name: Install requirements
         run: |
           set -x
+          cd rdm
           mkdir -p ./bin/osx/release
           cd bin/osx/release
           echo -e '[install]\nprefix=' >> setup.cfg
-          ls ../../../
-          ls ../../../src/py/
           pip3 install -t ./ -r ../../../src/py/requirements.txt --upgrade
       - name: Build
         run: |
