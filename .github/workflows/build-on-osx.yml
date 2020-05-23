@@ -48,28 +48,14 @@ jobs:
         run: |
           set -x
           cd rdm/src
-          echo -e '#ifndef RDM_VERSION\n    #define RDM_VERSION "2099.0.0"\n#endif // !RDM_VERSION' >> version.h
-          ./configure
-          cd ../3rdparty/crashreporter/
-          git checkout 7ec6f00
-          qmake DESTDIR=./bin
-          make -s -j 8
-          cp ./bin/crashreporter ../../bin/osx/release
-          # cd ../pyotherside/
-          # qmake DESTDIR=./bin
-          # make -s -j 8
-          # ls ./bin/
-          # cp ./bin/* ../../bin/osx/release
-          cd ../../src
+          echo -e '#ifndef RDM_VERSION\n    #define RDM_VERSION "${{ steps.get_version.outputs.VERSION }}"\n#endif // !RDM_VERSION' >> version.h
           cp resources/Info.plist.sample resources/Info.plist
-          sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
-          qmake CONFIG-=debug 
+          sed -i '' 's/0.0.0/${{ steps.get_version.outputs.VERSION }}/g' resources/Info.plist
+          qmake CONFIG-=debug CONFIG+=sdk_no_version_check
           make -s -j 8
       - name: Package dmg
         run: |
           set -x
-          ls rdm/bin/osx/release/${package_name}.app/Contents/
-          ls rdm/bin/osx/release/${package_name}.app/Contents/Resources/
           cp -rf rdm/src/py/formatters rdm/bin/osx/release/${package_name}.app/Contents/Resources/
           cp -f rdm/src/py/py.qrc rdm/bin/osx/release/${package_name}.app/Contents/Resources/
           cd rdm/bin/osx/release
@@ -99,5 +85,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: rdm.zip
+          name: rdm
           path: ./rdm/bin/osx/release/rdm.zip
