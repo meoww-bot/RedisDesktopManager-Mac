@@ -37,30 +37,42 @@ jobs:
           git clone --recursive https://github.com/uglide/RedisDesktopManager.git -b ${{ steps.get_version.outputs.VERSION }} rdm 
       # patch: https://github.com/cjbd/breakpad/commit/e436b073307e84a7695b355a4ea98acbe5548423
       - name: Install requirements
-        run: brew install openssl cmake python3      
+        run: |
+          set -x
+          cd rdm
+          mkdir -p ./bin/osx/release
+          cd bin/osx/release
+          echo -e '[install]\nprefix=' >> setup.cfg
+          pip3 install -t ./ -r ../../../src/py/requirements.txt --upgrade
       - name: Build
         run: |
-          cd rdm
           set -x
-          sed -i '' 's/1050/1070/g' ./3rdparty/gbreakpad/src/client/mac/sender/Breakpad.xib
-          cd src
+          cd rdm/src
+          echo -e '#ifndef RDM_VERSION\n    #define RDM_VERSION "2099.0.0"\n#endif // !RDM_VERSION' >> version.h
           ./configure
           cd ../3rdparty/crashreporter/
           git checkout 7ec6f00
           qmake DESTDIR=./bin
           make -s -j 8
-          mkdir -p ../../bin/osx/release
-          cp ./bin/crashreporter ../../bin/osx/release 
+          cp ./bin/crashreporter ../../bin/osx/release
+          # cd ../pyotherside/
+          # qmake DESTDIR=./bin
+          # make -s -j 8
+          # ls ./bin/
+          # cp ./bin/* ../../bin/osx/release
           cd ../../src
           cp resources/Info.plist.sample resources/Info.plist
-          sed -i '' "s/0.9.999/0.9.8/g" rdm.pro
           sed -i '' 's/debug: CONFIG-=app_bundle/#debug: CONFIG-=app_bundle/g' rdm.pro
           qmake CONFIG-=debug 
           make -s -j 8
       - name: Package dmg
         run: |
           set -x
-          cd rdm/bin/osx/release 
+          ls rdm/bin/osx/release/${package_name}.app/Contents/
+          ls rdm/bin/osx/release/${package_name}.app/Contents/Resources/
+          cp -rf rdm/src/py/formatters rdm/bin/osx/release/${package_name}.app/Contents/Resources/
+          cp -f rdm/src/py/py.qrc rdm/bin/osx/release/${package_name}.app/Contents/Resources/
+          cd rdm/bin/osx/release
           macdeployqt ${package_name}.app -qmldir=../../../src/qml -verbose=1 -dmg
           cp rdm.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
           zip --junk-paths rdm.zip redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
@@ -84,5 +96,8 @@ jobs:
           asset_path: ./rdm/bin/osx/release/rdm.zip
           asset_name: rdm.zip
           asset_content_type: application/zip
-
-
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: rdm.zip
+          path: ./rdm/bin/osx/release/rdm.zip
