@@ -91,5 +91,15 @@ jobs:
           asset_path: ./rdm/bin/osx/release/rdm.zip
           asset_name: rdm.zip
           asset_content_type: application/zip
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: rdm.zip
+          path: ./rdm/bin/osx/release/rdm.zip
+      - name: Upload Entire Directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: rdm
+          path: ./rdm/
 
 
