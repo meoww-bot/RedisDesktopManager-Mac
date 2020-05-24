@@ -60,8 +60,9 @@ jobs:
           set -x
           cd rdm/bin/osx/release
           macdeployqt Redis\ Desktop\ Manager.app -qmldir=../../../src/qml -verbose=1 -dmg
-          install_name_tool -change /usr/local/Cellar/openssl/1.0.2r/lib/libcrypto.1.0.0.dylib  @executable_path/../Frameworks/libcrypto.1.0.0.dylib Redis\ Desktop\ Manager.app/Contents/Frameworks/libssl.1.0.0.dylib
-          install_name_tool -change /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/Python @executable_path/../Frameworks/Python.framework/Versions/3.7/Python Redis\ Desktop\ Manager.app/Contents/MacOS/rdm
+          otool -L Redis\ Desktop\ Manager.app/Contents/MacOS/Redis\ Desktop\ Manager
+          # install_name_tool -change /usr/local/Cellar/openssl/1.0.2r/lib/libcrypto.1.0.0.dylib  @executable_path/../Frameworks/libcrypto.1.0.0.dylib Redis\ Desktop\ Manager.app/Contents/Frameworks/libssl.1.0.0.dylib
+          # install_name_tool -change /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/Python @executable_path/../Frameworks/Python.framework/Versions/3.7/Python Redis\ Desktop\ Manager.app/Contents/MacOS/rdm
           cp Redis\ Desktop\ Manager.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
           zip --junk-paths rdm.zip redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
       - name: Create Release
