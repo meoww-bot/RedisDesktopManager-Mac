@@ -45,6 +45,8 @@ jobs:
           mkdir -p /usr/local/opt/python/lib/Python.framework/Versions/
           ln -s /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7 /usr/local/opt/python/lib/Python.framework/Versions/3.7
           pip3 install -r ../../../src/py/requirements.txt --upgrade
+          cd /usr/local/Frameworks/Python.framework/
+          tree
       - name: Build
         run: |
           set -x
