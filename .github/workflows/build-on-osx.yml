@@ -41,7 +41,7 @@ jobs:
           mkdir -p ./bin/osx/release
           cd bin/osx/release
           echo -e '[install]\nprefix=' >> setup.cfg
-          brew install python3 openssl cmake
+          brew install python3 openssl cmake tree
           mkdir -p /usr/local/opt/python/lib/Python.framework/Versions/
           ln -s /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7 /usr/local/opt/python/lib/Python.framework/Versions/3.7
           pip3 install -r ../../../src/py/requirements.txt --upgrade
