@@ -44,7 +44,7 @@ jobs:
           brew install python3 openssl cmake
           mkdir -p /usr/local/opt/python/lib/Python.framework/Versions/
           ln -s /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7 /usr/local/opt/python/lib/Python.framework/Versions/3.7
-          pip3 install -t ./ -r ../../../src/py/requirements.txt --upgrade
+          pip3 install -r ../../../src/py/requirements.txt --upgrade
       - name: Build
         run: |
           set -x
@@ -55,7 +55,14 @@ jobs:
           sed -i '' 's/0.0.0/${{ steps.get_version.outputs.VERSION }}/g' resources/Info.plist
           qmake CONFIG-=debug CONFIG+=sdk_no_version_check
           make -s -j 8
-      - name: Package dmg
+      - name: Copy libs
+        run: |
+          set -x
+          cd rdm/bin/osx/release
+          cp -rf /usr/local/Frameworks/Python.framework Redis\ Desktop\ Manager.app/Contents/Frameworks/
+          cd Redis\ Desktop\ Manager.app/Contents/Frameworks/Python.framework/Versions/3.7/lib/python3.7/
+          python -m compileall -b .
+          ls -la
         run: |
           set -x
           cd rdm/bin/osx/release
