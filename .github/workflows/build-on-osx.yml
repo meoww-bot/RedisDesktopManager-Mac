@@ -62,7 +62,8 @@ jobs:
           cp -rf /usr/local/Frameworks/Python.framework Redis\ Desktop\ Manager.app/Contents/Frameworks/
           cd Redis\ Desktop\ Manager.app/Contents/Frameworks/Python.framework/Versions/3.7/lib/python3.7/
           python -m compileall -b .
-          ls -la
+          ls -al
+      - name: Package dmg
         run: |
           set -x
           cd rdm/bin/osx/release
