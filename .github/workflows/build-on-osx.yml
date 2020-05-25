@@ -45,7 +45,8 @@ jobs:
           ln -s /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7 /usr/local/opt/python/lib/Python.framework/Versions/3.7
           pip3 install -r ../../../src/py/requirements.txt --upgrade
           # cd /usr/local/Cellar/python/3.7.7/Frameworks/Python.framework/Versions/3.7/lib/python3.7
-          # python3 -m compileall -b .
+          rm -rf test
+          python3 -m compileall -b .
       - name: Build
         run: |
           set -x
@@ -62,8 +63,8 @@ jobs:
           cd rdm/bin/osx/release
           cp -rf /usr/local/Cellar/python/3.7.7/Frameworks/Python.framework Redis\ Desktop\ Manager.app/Contents/Frameworks/
           cd Redis\ Desktop\ Manager.app/Contents/Frameworks/Python.framework/Versions/3.7/lib/python3.7/
-          # rm -rf __pycache__
-          # rm -rf *.py
+          rm -rf __pycache__
+          rm -rf *.py
           ls -al
       - name: Package dmg
         run: |
