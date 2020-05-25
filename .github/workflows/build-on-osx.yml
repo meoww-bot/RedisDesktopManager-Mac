@@ -33,7 +33,6 @@ jobs:
       - name: Clone repo
         run: |
           git clone --recursive https://github.com/uglide/RedisDesktopManager.git -b ${{ steps.get_version.outputs.VERSION }} rdm 
-      # patch: https://github.com/cjbd/breakpad/commit/e436b073307e84a7695b355a4ea98acbe5548423
       - name: Install requirements
         run: |
           set -x
@@ -45,8 +44,8 @@ jobs:
           mkdir -p /usr/local/opt/python/lib/Python.framework/Versions/
           ln -s /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7 /usr/local/opt/python/lib/Python.framework/Versions/3.7
           pip3 install -r ../../../src/py/requirements.txt --upgrade
-          cd /usr/local/Frameworks/Python.framework/
-          tree
+          cd /usr/local/Cellar/python/
+          ls
       - name: Build
         run: |
           set -x
@@ -69,12 +68,10 @@ jobs:
         run: |
           set -x
           cd rdm/bin/osx/release
-          macdeployqt Redis\ Desktop\ Manager.app -qmldir=../../../src/qml -verbose=1 -dmg
+          macdeployqt Redis\ Desktop\ Manager.app -qmldir=../../../src/qml -verbose=1
           otool -L Redis\ Desktop\ Manager.app/Contents/MacOS/Redis\ Desktop\ Manager
-          # install_name_tool -change /usr/local/Cellar/openssl/1.0.2r/lib/libcrypto.1.0.0.dylib  @executable_path/../Frameworks/libcrypto.1.0.0.dylib Redis\ Desktop\ Manager.app/Contents/Frameworks/libssl.1.0.0.dylib
-          # install_name_tool -change /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/Python @executable_path/../Frameworks/Python.framework/Versions/3.7/Python Redis\ Desktop\ Manager.app/Contents/MacOS/rdm
-          cp Redis\ Desktop\ Manager.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
-          zip --junk-paths rdm.zip redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
+          cp Redis\ Desktop\ Manager.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.app
+          zip --junk-paths rdm-${{ steps.get_version.outputs.VERSION }}.zip redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.app
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -92,11 +89,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./rdm/bin/osx/release/rdm.zip
-          asset_name: rdm.zip
+          asset_path: ./rdm/bin/osx/release/rdm-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_name: rdm-${{ steps.get_version.outputs.VERSION }}.zip
           asset_content_type: application/zip
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: rdm
-          path: ./rdm/bin/osx/release/rdm.zip
+          name: rdm-${{ steps.get_version.outputs.VERSION }}
+          path: ./rdm/bin/osx/release/rdm-${{ steps.get_version.outputs.VERSION }}.zip
