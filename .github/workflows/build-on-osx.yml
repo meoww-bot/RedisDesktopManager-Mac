@@ -72,9 +72,9 @@ jobs:
           set -x
           cd rdm/bin/osx/release
           macdeployqt Redis\ Desktop\ Manager.app -qmldir=../../../src/qml -verbose=1
-          otool -L Redis\ Desktop\ Manager.app/Contents/MacOS/Redis\ Desktop\ Manager
-          cp Redis\ Desktop\ Manager.app redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.app
-          zip --junk-paths rdm-${{ steps.get_version.outputs.VERSION }}.zip redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.app
+          otool -L Redis\ Desktop\ Manager.app/Contents/MacOS/Redis\ Desktop\ Manager -dmg
+          cp -r Redis\ Desktop\ Manager.dmg redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
+          zip --junk-paths rdm-${{ steps.get_version.outputs.VERSION }}.zip redis-desktop-manager-${{ steps.get_version.outputs.VERSION }}.dmg
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
