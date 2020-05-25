@@ -62,7 +62,8 @@ jobs:
           set -x
           cd rdm/bin/osx/release
           cp -rf /usr/local/Cellar/python/3.7.7/Frameworks/Python.framework Redis\ Desktop\ Manager.app/Contents/Frameworks/
-          cd Redis\ Desktop\ Manager.app/Contents/Frameworks/Python.framework/Versions/3.7/lib/python3.7/
+          cd Redis\ Desktop\ Manager.app/Contents/Frameworks/
+          tree
           rm -rf __pycache__
           rm -rf *.py
           ls -al
