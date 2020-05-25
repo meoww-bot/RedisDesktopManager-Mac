@@ -44,8 +44,8 @@ jobs:
           mkdir -p /usr/local/opt/python/lib/Python.framework/Versions/
           ln -s /usr/local/opt/python/Frameworks/Python.framework/Versions/3.7 /usr/local/opt/python/lib/Python.framework/Versions/3.7
           pip3 install -r ../../../src/py/requirements.txt --upgrade
-          cd /usr/local/Cellar/python/
-          ls
+          cd /usr/local/Cellar/python/3.7.7/Frameworks/Python.framework/Versions/3.7/lib/python3.7
+          python3 -m compileall -b .
       - name: Build
         run: |
           set -x
@@ -60,9 +60,10 @@ jobs:
         run: |
           set -x
           cd rdm/bin/osx/release
-          cp -rf /usr/local/Frameworks/Python.framework Redis\ Desktop\ Manager.app/Contents/Frameworks/
+          cp -rf /usr/local/Cellar/python/3.7.7/Frameworks/Python.framework Redis\ Desktop\ Manager.app/Contents/Frameworks/
           cd Redis\ Desktop\ Manager.app/Contents/Frameworks/Python.framework/Versions/3.7/lib/python3.7/
-          python -m compileall -b .
+          rm -rf __pycache__
+          rm -rf *.py
           ls -al
       - name: Package dmg
         run: |
